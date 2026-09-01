@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Evan Turok.com — films discussed on the radio, rated out of 10.">
+  <title>Evan Turok.com | Film Ratings</title>
+  <style>
+    :root {
+      --silver: #c9c9c9;
+      --silver-dark: #8d8d8d;
+      --silver-light: #f4f4f4;
+      --text: #252525;
+      --muted: #707070;
+      --white: #ffffff;
+      --shadow: 0 12px 35px rgba(0,0,0,.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, #fff 0%, #fafafa 100%);
+      line-height: 1.6;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .about a {
+      color: #0066cc;
+      text-decoration: underline;
+      font-weight: 600;
+    }
+
+    .about a:hover {
+      color: #004999;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255,255,255,.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #ddd;
+    }
+
+    .nav {
+      max-width: 1180px;
+      margin: auto;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: .02em;
+    }
+
+    .brand span {
+      color: #999;
+      font-weight: 400;
+    }
+
+    nav {
+      display: flex;
+      gap: 24px;
+      font-weight: 600;
+    }
+
+    nav a:hover { color: #777; }
+
+    .hero {
+      max-width: 1180px;
+      margin: auto;
+      padding: 70px 24px 35px;
+      display: grid;
+      grid-template-columns: 1.6fr .8fr;
+      gap: 45px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      color: #888;
+      font-size: .78rem;
+      font-weight: 800;
+    }
+
+    h1 {
+      margin: 8px 0 16px;
+      font-size: clamp(2.7rem, 6vw, 5.4rem);
+      line-height: .98;
+      letter-spacing: -.05em;
+    }
+
+    .hero p {
+      max-width: 680px;
+      color: var(--muted);
+      font-size: 1.1rem;
+    }
+
+    .hero-photo {
+      min-height: 300px;
+      border-radius: 24px;
+      border: 1px solid #c8c8c8;
+      background: linear-gradient(145deg, #fff, #d6d6d6, #fff);
+      box-shadow: var(--shadow);
+      display: grid;
+      place-items: center;
+      color: #777;
+      font-weight: 700;
+    }
+
+    .section {
+      max-width: 1180px;
+      margin: auto;
+      padding: 45px 24px;
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin: 0;
+      letter-spacing: -.03em;
+    }
+
+    .section-heading p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .controls {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .controls input,
+    .controls select {
+      border: 1px solid #ccc;
+      background: white;
+      border-radius: 999px;
+      padding: 12px 16px;
+      font: inherit;
+      outline: none;
+    }
+
+    .controls input:focus,
+    .controls select:focus {
+      border-color: #888;
+      box-shadow: 0 0 0 3px #eee;
+    }
+
+    .film-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 22px;
+    }
+
+    .film-card {
+      overflow: hidden;
+      border: 1px solid #ddd;
+      border-radius: var(--radius);
+      background: white;
+      box-shadow: 0 7px 22px rgba(0,0,0,.045);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .film-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+    }
+
+    .poster {
+      aspect-ratio: 2 / 3;
+      background: linear-gradient(145deg, #f8f8f8, #d2d2d2);
+      display: grid;
+      place-items: center;
+      color: #777;
+      font-size: .9rem;
+      text-align: center;
+      padding: 15px;
+    }
+
+    .poster img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .film-info { padding: 17px; }
+
+    .film-title {
+      margin: 0 0 5px;
+      font-size: 1.08rem;
+    }
+
+    .film-year {
+      color: #888;
+      font-size: .9rem;
+    }
+
+    .score {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 12px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #f2f2f2, #fff);
+      border: 1px solid #c7c7c7;
+      font-weight: 800;
+    }
+
+    .score small {
+      color: #888;
+      font-weight: 600;
+    }
+
+    .empty {
+      display: none;
+      padding: 35px;
+      border: 1px dashed #bbb;
+      border-radius: var(--radius);
+      text-align: center;
+      color: #777;
+    }
+
+    .about {
+      border-top: 1px solid #ddd;
+      background: #f7f7f7;
+    }
+
+    .about-content {
+      display: grid;
+      grid-template-columns: .8fr 1.2fr;
+      gap: 45px;
+      align-items: center;
+    }
+
+    .about-photo {
+      min-height: 360px;
+      border-radius: 24px;
+      border: 1px solid #c7c7c7;
+      background: linear-gradient(145deg, #fff, #d8d8d8);
+      display: grid;
+      place-items: center;
+      color: #777;
+    }
+
+    .newsletter {
+      max-width: 760px;
+      margin: 20px auto 80px;
+      padding: 45px;
+      border: 1px solid #c5c5c5;
+      border-radius: 25px;
+      background: linear-gradient(145deg, #fff, #f1f1f1);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .price {
+      font-size: 2.4rem;
+      font-weight: 800;
+      margin: 10px 0;
+    }
+
+    .price span {
+      font-size: 1rem;
+      color: #777;
+      font-weight: 500;
+    }
+
+    .newsletter form {
+      display: flex;
+      gap: 10px;
+      max-width: 520px;
+      margin: 25px auto 0;
+    }
+
+    .newsletter input {
+      flex: 1;
+      min-width: 0;
+      border: 1px solid #bbb;
+      border-radius: 999px;
+      padding: 13px 17px;
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 13px 21px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      background: #222;
+      color: white;
+    }
+
+    button:hover { background: #555; }
+
+    #message {
+      margin-top: 15px;
+      color: #666;
+      font-size: .92rem;
+    }
+
+    footer {
+      border-top: 1px solid #ddd;
+      padding: 28px 24px;
+      text-align: center;
+      color: #888;
+      font-size: .9rem;
+    }
+
+    @media (max-width: 900px) {
+      .film-grid { grid-template-columns: repeat(3, 1fr); }
+      .hero, .about-content { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 650px) {
+      .nav { padding: 14px 16px; }
+      nav { gap: 13px; font-size: .9rem; }
+      .hero { padding-top: 45px; }
+      .film-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+      .newsletter { margin-left: 16px; margin-right: 16px; padding: 30px 20px; }
+      .newsletter form { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a class="brand" href="#home">Evan Turok<span>.com</span></a>
+    <nav aria-label="Main navigation">
+      <a href="#home">Films</a>
+      <a href="#about">About</a>
+      <a href="#newsletter">Newsletter</a>
+    </nav>
+  </div>
+</header>
+
+<main id="home">
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Your comprehensive film guide</div>
+      <h1>Evan Turok.com</h1>
+      <p>
+        Welcome to the home of every film discussed on the show — with my personal
+        score out of 10. Browse the collection, discover something new and find
+        your next film to watch.
+      </p>
+    </div>
+    <div class="hero-photo"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRk_tVlAq36YXmcYy-nC9ya_mizdmd-sm3I8WyUozFPTEa2YPSpRaC6pw&s=10" alt="Evan Turok picture" width="550" height="400"> </section>
+
+
+
+  <section class="section">
+    <div class="section-heading">
+      <div>
+        <h2>Every film. My score.</h2>
+        <p>A growing catalogue of films discussed on the show. Updated weekly.</p>
+      </div>
+    </div>
+
+    <div class="controls">
+      <input id="search" type="search" placeholder="Search films..." aria-label="Search films">
+      <select id="sort" aria-label="Sort films">
+        <option value="newest">Newest first</option>
+        <option value="score-high">Highest score</option>
+        <option value="score-low">Lowest score</option>
+        <option value="title">A–Z</option>
+      </select>
+    </div>
+
+    <div id="filmGrid" class="film-grid"></div>
+    <div id="empty" class="empty">No films match your search.</div>
+  </section>
+</main>
+
+<section id="about" class="about">
+  <div class="section about-content">
+    <div class="about-photo">YOUR PHOTO<br>PLACEHOLDER</div>
+    <div>
+      <div class="eyebrow">About the host</div>
+      <h2>Meet the person behind 'The Silver Screen Spin' and 'Turok's Takes'</h2>
+      <p>
+        Evan Turok is a Film reviewer, writer and Radio DJ from Romsey Victoria.
+        Between his radio show 'The Silver Screen Spin', playing every Monday from
+        6–7 pm, and his monthly written reviews in the 'Star Weekly', released
+        state wide the second Tuesday of the month, titled under 'Turoks Takes', he has become a consistent
+        and trusted voice in the film world.
+      </p>
+      <p>
+        Listen to The Silver Screen Spin on <a href="https://www.sunburyradio.com.au/" target="_blank" rel="noopener">99.3FM</a>
+        and read Evan's monthly reviews in
+        <a href="https://starweekly.com.au/" target="_blank" rel="noopener">Star Weekly</a>.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="newsletter" class="section">
+  <div class="newsletter">
+    <div class="eyebrow">The Evan Turok Newsletter</div>
+    <h2>Get my monthly written reviews</h2>
+    <p>
+      A monthly collection of film reviews, recommendations and thoughts from
+      Evan.
+    </p>
+    <div class="price">$2 <span>/ month</span></div>
+
+    <form id="newsletterForm">
+      <input type="email" id="email" placeholder="Your email address" required>
+      <button type="submit">Subscribe — $2/month</button>
+    </form>
+    <div id="message"></div>
+  </div>
+</section>
+
+<footer>
+  © 2026 Evan Turok.com · Film recommendations from the radio show
+</footer>
+
+<script>
+  // Replace these placeholder films with your real catalogue.
+  const films = [
+    { title: "The Odyssey", year: 2026, score: 9, poster: "https://media.themoviedb.org/t/p/w220_and_h330_face/yy3OlixudhSYJVHypFWCUnPMhd6.jpg", added: 1 },
+    { title: "EraserHead", year: 1977, score: 7, poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0khlLy3Iq28WBr5KWaEQil4QWXbPhSHR3Ci57d_LF6A&s=10", added: 1 },
+    { title: "The Color of Money", year: 1986, score: 7, poster: "https://www.impawards.com/1986/posters/color_of_money.jpg", added: 1 },
+    { title: "All the Presidents Men", year: 1976, score: 8, poster: "https://www.impawards.com/1976/posters/all_the_presidents_men.jpg", added: 1 },
+    { title: "Paris, Texas", year: 1984, score: 5, poster: "https://www.impawards.com/1984/posters/paris_texas.jpg", added: 1 },
+    { title: "Jurassic World: Rebirth", year: 2025, score: 3, poster: "https://www.universalpictures.com.au/tl_files/content/movies/jurassic_world_rebirth/posters/01.jpg", added: 1 },
+    { title: "Rope", year: 1948, score: 7, poster: "https://upload.wikimedia.org/wikipedia/en/8/8e/Rope2.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original", added: 1 },
+    { title: "The Rip", year: 2026, score: 3, poster: "https://www.impawards.com/2026/posters/rip.jpg", added: 1 },
+    { title: "True Romance", year: 1993, score: 8, poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_Oxj08fG4lGh_hGfGzTUQofhJMIdFylGlnQ-4Iwcb3w&s=10", added: 1 },
+    { title: "Project Hail Mary", year: 2026, score: 8, poster: "https://pbs.twimg.com/media/HFqYIlgbMAAR6Z3.jpg", added: 1 },
+    { title: "Michael", year: 2026, score: 6, poster: "https://www.impawards.com/2026/posters/michael.jpg", added: 1 },
+    { title: "The Sheep Detectives", year: 2026, score: 4, poster: "https://www.impawards.com/2026/posters/sheep_detectives.jpg", added: 1 },
+    { title: "The Devil Wears Prada 2", year: 2026, score: 4, poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTeUneXB9oO7V1etq7--LOBcrUA-A6QDxOeIpSJu4oyrA&s=10", added: 1 },
+    { title: "The Mandolorian & Grogu", year: 2026, score: 4, poster: "https://m.media-amazon.com/images/I/714Jgnz1WxL._AC_UF894,1000_QL80_.jpg", added: 1 },
+    { title: "Masters of the Universe", year: 2026, score: 5, poster: "https://www.impawards.com/2026/posters/masters_of_the_universe.jpg", added: 1 },
+    { title: "Disclosure Day", year: 2026, score: 2, poster: "https://www.impawards.com/2026/posters/disclosure_day.jpg", added: 1 },
+    { title: "Toy Story 5", year: 2026, score: 5, poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKNToKGYjxUANFCLii4sRjI3k4jkSapTmwSjUpWrduFw&s=10", added: 1 },
+    { title: "Super-Girl", year: 2026, score: 3, poster: "https://www.impawards.com/2026/posters/supergirl.jpg", added: 1 },
+    { title: "Minions and Monsters", year: 2026, score: 5, poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDMajmWqWp9L7uOGjGnN_AO-5zZVzerdqCKH0F3zHV63xkDhL20ze6pPaX9PNvre-4n-WBdw&s=10", added: 1 },
+    { title: "Scilence", year: 2016, score: 8, poster: "https://www.impawards.com/2016/posters/silence.jpg", added: 1 },
+    { title: "The End of Oak Street", year: 2026, score: 5, poster: "https://www.impawards.com/2026/posters/end_of_oak_street.jpg", added: 1 },
+    { title: "Whiplash", year: 2014, score: 9, poster: "https://www.impawards.com/2014/posters/whiplash.jpg", added: 1 },
+    { title: "Bugonia", year: 2025, score: 8, poster: "https://www.impawards.com/2025/posters/bugonia.jpg", added: 1 },
+    { title: "Its A Wonderful life", year: 1946, score: 10, poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWUUcyhvK758qcEs1YKRqdByOmnN4d-XOSdjUFZiK2fpwh1SerDOnNBlMtIR9__8LCxHRRpX94ejsz_VSzAEpfItqZFJSirNjs5Lq6_js&s=10", added: 1 },
+    { title: "Singin' in the Rain", year: 1952, score: 10, poster: "https://www.impawards.com/1952/posters/singin_in_the_rain.jpg", added: 1 },
+    { title: "Is This Thing On?", year: 2025, score: 6, poster: "https://www.impawards.com/2025/posters/is_this_thing_on.jpg", added: 1 },
+    { title: "The Drama", year: 2026, score: 9, poster: "https://www.impawards.com/2026/posters/drama.jpg", added: 1 },
+    { title: "Spider-Man: Brand New Day", year: 2026, score: 8, poster: "https://www.impawards.com/2026/posters/spiderman_brand_new_day.jpg", added: 2 },
+    { title: "Cool Hand Luke", year: 1967, score: 8, poster: "https://www.impawards.com/1967/posters/cool_hand_luke.jpg", added: 3 },
+    { title: "Moana (Live Action)", year: 2026, score: 3, poster: "https://www.impawards.com/2026/posters/moana.jpg", added: 4 },
+    { title: "Once Upon a Time in Hollywood", year: 2019, score: 9, poster: "https://www.impawards.com/2019/posters/once_upon_a_time_in_hollywood.jpg", added: 6 },
+    { title: "Apocalypse Now", year: 1979, score: 9, poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNQw79j7Bvp5Dy9_8RkjecXNkrNNV2LK5GxIkisopV7Q&s=10", added: 7 },
+    { title: "Tony", year: 2026, score: 7, poster: "https://www.impawards.com/2026/posters/tony.jpg", added: 8 },
+    { title: "A Quiet Place", year: 2018, score: 8, poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsLuSR85bplBsgGZ7lgO2_iZSsepmNiI7Cm9kNFSJpKA&s=10", added: 9 },
+    { title: "Cars", year: 2006, score: 10, poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfswDdTEeXgcn9v6PtgN6fibfFs7DzXAcxcfNYWWVv5g&s=10", added: 1 },
+    { title: "Django Unchained", year: 2012, score: 10, poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfswDdTEeXgcn9v6PtgN6fibfFs7DzXAcxcfNYWWVv5g&s=10", added: 1 },
+    { title: "The Philadelphia Story", year: 1940, score: 4, poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCuRzCd-KU2fq_sZCelxPoaeyU9bY6Ki9o--dYVri_3Q&s=10", added: 10 }
+    ];
+
+  const grid = document.getElementById("filmGrid");
+  const empty = document.getElementById("empty");
+  const search = document.getElementById("search");
+  const sort = document.getElementById("sort");
+
+  function renderFilms() {
+    const query = search.value.toLowerCase().trim();
+    let results = films.filter(f => f.title.toLowerCase().includes(query));
+
+    if (sort.value === "score-high") results.sort((a,b) => b.score - a.score);
+    if (sort.value === "score-low") results.sort((a,b) => a.score - b.score);
+    if (sort.value === "title") results.sort((a,b) => a.title.localeCompare(b.title));
+    if (sort.value === "newest") results.sort((a,b) => b.added - a.added);
+
+    grid.innerHTML = results.map(film => `
+      <article class="film-card">
+        <div class="poster">
+          ${film.poster
+            ? `<img src="${film.poster}" alt="${film.title} poster" loading="lazy" onerror="this.style.display='none'; this.parentElement.innerHTML='FILM POSTER<br>PLACEHOLDER';">`
+            : `FILM POSTER<br>PLACEHOLDER`}
+        </div>
+        <div class="film-info">
+          <h3 class="film-title">${film.title}</h3>
+          <div class="film-year">${film.year}</div>
+          <div class="score">${film.score}<small>/ 10</small></div>
+        </div>
+      </article>
+    `).join("");
+
+    empty.style.display = results.length ? "none" : "block";
+  }
+
+  search.addEventListener("input", renderFilms);
+  sort.addEventListener("change", renderFilms);
+  renderFilms();
+
+  document.getElementById("newsletterForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    document.getElementById("message").textContent =
+      "Thanks! This is currently a demo form. Connect it to Stripe + an email/newsletter service to activate the $2/month subscription.";
+  });
+</script>
+
+</body>
+</html>
